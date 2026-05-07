@@ -101,9 +101,13 @@ def webhook():
     # 处理 URL 验证（飞书配置时会发送 GET 请求验证）
     if request.method == "GET":
         challenge = request.args.get("challenge")
+        print(f"[DEBUG] GET request received, challenge={challenge}")
         if challenge:
+            response_data = json.dumps({"challenge": challenge})
+            print(f"[DEBUG] Returning response: {response_data}")
             return Response(
-                json.dumps({"challenge": challenge}),
+                response_data,
+                status=200,
                 mimetype="application/json"
             )
         return "OK"
