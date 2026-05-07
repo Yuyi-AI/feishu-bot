@@ -95,15 +95,18 @@ def chat_with_minimax(user_message, history=None):
 def index():
     return "飞书 AI 机器人运行中！"
 
-@app.route("/webhook", methods=["POST"])
+@app.route("/webhook", methods=["GET", "POST"])
 def webhook():
     """飞书事件 webhook"""
-    data = request.json
-    
     # 处理 URL 验证（飞书配置时会发送 GET 请求验证）
     if request.method == "GET":
+        data = request.args
         challenge = data.get("challenge")
-        return jsonify({"challenge": challenge})
+        if challenge:
+            return jsonify({"challenge": challenge})
+        return "OK"
+    
+    data = request.json
     
     # 忽略非消息事件
     if data.get("header", {}).get("event_type") != "im.message.receive_v1":
