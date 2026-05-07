@@ -3,11 +3,14 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
+# 设置默认端口
+ENV PORT=8080
+
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY app.py .
 
-EXPOSE $PORT
+EXPOSE ${PORT}
 
-CMD ["gunicorn", "--bind", "0.0.0.0:$PORT", "--workers", "1", "--timeout", "120", "app:app"]
+CMD sh -c "gunicorn --bind 0.0.0.0:${PORT} --workers 1 --timeout 120 app:app"
