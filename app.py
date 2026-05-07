@@ -100,10 +100,12 @@ def webhook():
     """飞书事件 webhook"""
     # 处理 URL 验证（飞书配置时会发送 GET 请求验证）
     if request.method == "GET":
-        data = request.args
-        challenge = data.get("challenge")
+        challenge = request.args.get("challenge")
         if challenge:
-            return jsonify({"challenge": challenge})
+            return Response(
+                json.dumps({"challenge": challenge}),
+                mimetype="application/json"
+            )
         return "OK"
     
     data = request.json
